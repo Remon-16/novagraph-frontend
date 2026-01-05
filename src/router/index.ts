@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import UserLoginPage from '@/pages/user/UserLoginPage.vue'
+import UserLoginModal from '@/components/UserLoginModal.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: '/user/login',
       name: '用户登录',
-      component: UserLoginPage,
+      component: UserLoginModal,
     },
     {
       path: '/about',
