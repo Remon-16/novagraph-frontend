@@ -174,6 +174,7 @@ import {
   LockOutlined,
   SmileOutlined
 } from '@ant-design/icons-vue'
+import { useLoginUserStore } from '@/stores/useLoginUserStore'
 
 // Props
 interface Props {
@@ -189,6 +190,8 @@ const emit = defineEmits<{
   'update:open': [value: boolean]
   'login-success': []
 }>()
+
+const loginUserStore = useLoginUserStore()
 
 // 响应式数据
 const currentView = ref<'login' | 'register'>('login')
@@ -290,9 +293,7 @@ const handleLogin = async () => {
     //   password: loginForm.password
     // })
 
-    // 临时模拟 - 实际使用时删除
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    console.log('登录信息:', loginForm)
+    loginUserStore.fetchLoginUser()
 
     message.success('登录成功！')
 

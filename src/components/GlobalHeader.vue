@@ -37,29 +37,38 @@
 
       <!-- 已登录状态 -->
       <template v-else>
-        <!-- 上传按钮 -->
+        <!-- 动态中心 -->
+        <div>
+          <div v-if="unReadMessage" class="badge-dot"></div>
+          <MessageOutlined class="message-icon" />
+        </div>
+        <!-- 历史列表 -->
+        <div>
+          <div v-if="unReadMessage" class="badge-dot"></div>
+          <HistoryOutlined class="message-icon" />
+        </div>
+        <!-- 收藏夹 -->
+        <div>
+          <div v-if="unReadMessage" class="badge-dot"></div>
+          <StarOutlined class="message-icon" />
+        </div>
+        <!-- 消息中心 -->
+        <div>
+          <div v-if="unReadMessage" class="badge-dot"></div>
+          <MailOutlined class="message-icon" />
+        </div>
+        <!-- 创作中心 -->
         <a-button
           type="primary"
           @click="handleUpload"
           class="upload-btn"
         >
           <template #icon>
-            <UploadOutlined />
+            <AlertOutlined />
           </template>
-          创建故事
+          创作中心
         </a-button>
 
-        <!-- AI绘图按钮 -->
-        <a-button
-          type="dashed"
-          @click="handleAIDraw"
-          class="ai-draw-btn"
-        >
-          <template #icon>
-            <RobotOutlined />
-          </template>
-          AI绘图
-        </a-button>
         <div v-if="loginUserStore.loginUser.id">
           <!-- 用户信息栏 -->
           <a-dropdown :trigger="['click']" placement="bottomRight">
@@ -74,15 +83,15 @@
               <a-menu>
                 <a-menu-item key="profile" @click="handleProfile">
                   <UserOutlined />
-                  个人资料
+                  我的空间
                 </a-menu-item>
                 <a-menu-item key="my-images" @click="handleMyImages">
-                  <PictureOutlined />
-                  我的图片
+                  <FormOutlined />
+                  个人资料
                 </a-menu-item>
                 <a-menu-item key="favorites" @click="handleFavorites">
-                  <HeartOutlined />
-                  我的收藏
+                  <ShoppingOutlined />
+                  积分商城
                 </a-menu-item>
                 <a-menu-divider />
                 <a-menu-item key="logout" @click="handleLogout">
@@ -118,9 +127,12 @@
 import {
   CameraOutlined,
   DownOutlined,
-  HeartOutlined, LogoutOutlined, PictureOutlined,
-  RobotOutlined,
-  UploadOutlined,
+  ShoppingOutlined, LogoutOutlined, FormOutlined,
+  MailOutlined,
+  HistoryOutlined,
+  StarOutlined,
+  AlertOutlined,
+  MessageOutlined,
   UserOutlined
 } from '@ant-design/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -137,6 +149,7 @@ const loginUserStore = useLoginUserStore()
 
 // 控制模态框显示/隐藏
 const showAuthModal = ref(false)
+const unReadMessage = ref(false)
 
 // 登录成功回调
 const handleLoginSuccess = () => {
@@ -310,7 +323,7 @@ const handleLogout = () => {
 }
 
 .search-input {
-  width: 200px;
+  width: 240px;
 }
 
 .upload-btn, .ai-draw-btn {
@@ -341,6 +354,25 @@ const handleLogout = () => {
 .dropdown-icon {
   font-size: 12px;
   color: #8c8c8c;
+}
+
+.badge-dot {
+  position: absolute;
+  top: -5px;
+  right: 0px;
+  width: 12px;
+  height: 12px;
+  background: #f5222d;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 1;
+}
+.message-icon {
+  display: flex;
+  margin-right: 12px;
+  margin-top: 2px;
+  font-size: 22px; /* 调整大小 */
+  color: rgba(0, 0, 0, 0.45); /* 调整颜色，使用灰色 */
 }
 
 </style>

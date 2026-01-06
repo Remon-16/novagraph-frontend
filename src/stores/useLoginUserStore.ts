@@ -9,9 +9,12 @@ export const useLoginUserStore = defineStore('loginUser', () => {
     userName: '未登录',
   })
 
-  // setTimeout(() => {
-  //   loginUser.value = { userName: '测试用户', id: 1 }
-  // }, 3000)
+  /**
+   * 远程获取登录用户信息
+   */
+  function fetchLoginUser() {
+    loginUser.value = { userName: '测试用户', id: 1 }
+  }
 
   /**
    * 设置登录用户
@@ -22,5 +25,5 @@ export const useLoginUserStore = defineStore('loginUser', () => {
   }
 
   // 返回
-  return { loginUser, setLoginUser }
+  return { loginUser, fetchLoginUser, setLoginUser }
 })
