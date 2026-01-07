@@ -104,8 +104,9 @@ onMounted(() => {
 
 /* 内容区域样式 */
 .content {
-  margin-top: 64px;
-  min-height: calc(100vh - 64px - 200px);
+  padding: 28px;
+  background: linear-gradient(to right, #fefefe, #fff);
+  margin-bottom: 28px;
 }
 
 .content-wrapper {
