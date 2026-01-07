@@ -61,9 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, h } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { message } from 'ant-design-vue'
+import { onMounted } from 'vue'
 import {
   CameraOutlined,
   GithubOutlined,

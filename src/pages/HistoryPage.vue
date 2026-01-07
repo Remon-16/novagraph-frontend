@@ -268,7 +268,7 @@ const loadItems = () => {
     const end = start + pageSize.value;
     const newItems = total.slice(start, end);
 
-    displayedItems.value = [...allHistoryItems.value, ...newItems];
+    displayedItems.value = [...displayedItems.value, ...newItems];
     currentPage.value++;
 
     if (displayedItems.value.length >= total.length) {
