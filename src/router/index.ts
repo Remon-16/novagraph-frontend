@@ -4,6 +4,7 @@ import UserLoginModal from '@/components/UserLoginModal.vue'
 import FavoritesPage from '@/pages/FavoritesPage.vue'
 import HistoryPage from '@/pages/HistoryPage.vue'
 import UserInfoPage from '@/pages/user/UserInfoPage.vue'
+import FeedPage from '@/pages/FeedPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/history',
       name: '浏览历史',
       component: HistoryPage,
+    },
+    {
+      path: '/feed',
+      name: '用户动态',
+      component: FeedPage,
     },
     {
       path: '/about',
