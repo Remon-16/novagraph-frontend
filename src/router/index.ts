@@ -5,6 +5,7 @@ import FavoritesPage from '@/pages/FavoritesPage.vue'
 import HistoryPage from '@/pages/HistoryPage.vue'
 import UserInfoPage from '@/pages/user/UserInfoPage.vue'
 import FeedPage from '@/pages/FeedPage.vue'
+import UserAttnPage from '@/pages/user/UserAttnPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/feed',
       name: '用户动态',
       component: FeedPage,
+    },
+    {
+      path: '/attn',
+      name: '用户关注',
+      component: UserAttnPage,
     },
     {
       path: '/about',
