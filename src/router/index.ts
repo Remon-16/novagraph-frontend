@@ -6,6 +6,7 @@ import HistoryPage from '@/pages/HistoryPage.vue'
 import UserInfoPage from '@/pages/user/UserInfoPage.vue'
 import FeedPage from '@/pages/FeedPage.vue'
 import UserAttnPage from '@/pages/user/UserAttnPage.vue'
+import UserMessagePage from '@/pages/user/UserMessagePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,11 @@ const router = createRouter({
       path: '/user/info',
       name: '用户资料',
       component: UserInfoPage,
+    },
+    {
+      path: '/user/message',
+      name: '用户信息',
+      component: UserMessagePage,
     },
     {
       path: '/favorites',
