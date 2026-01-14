@@ -20,6 +20,7 @@
       <!-- 搜索框 -->
       <a-input-search
         v-model:value="searchValue"
+        @update:value="val => $emit('update:searchValue', val)"
         placeholder="搜索故事..."
         class="search-input"
         @search="handleSearch"
@@ -141,6 +142,13 @@ import { computed, h, ref } from 'vue'
 import { type MenuProps, message } from 'ant-design-vue'
 import UserLoginModal from '@/components/UserLoginModal.vue'
 
+const props = defineProps({
+  searchValue: String
+})
+
+const emit = defineEmits({})
+emit('update:searchValue', 'onSearch');
+
 // 路由
 const router = useRouter()
 const route = useRoute()
@@ -169,7 +177,7 @@ const userStore = {
 
 // 响应式数据
 const selectedKeys = ref<string[]>(['home'])
-const searchValue = ref('')
+const searchValue = props.searchValue
 
 // 导航菜单项
 const navItems = ref([
@@ -235,9 +243,16 @@ const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
 }
 
 const handleSearch = (value: string) => {
-  if (value.trim()) {
-    router.push(`/search?q=${encodeURIComponent(value)}`)
+  if (!value || !value.trim()) {
+    // 如果是空搜索，跳回首页不带参数
+    router.push({ path: '/' });
+    return;
   }
+
+  router.push({
+    path: '/',
+    query: { q: value }
+  });
 }
 
 const handleLogin = () => {

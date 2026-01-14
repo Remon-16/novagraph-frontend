@@ -7,6 +7,7 @@ import UserInfoPage from '@/pages/user/UserInfoPage.vue'
 import FeedPage from '@/pages/FeedPage.vue'
 import UserAttnPage from '@/pages/user/UserAttnPage.vue'
 import UserMessagePage from '@/pages/user/UserMessagePage.vue'
+import HomePage from '@/pages/HomePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,7 +15,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: HomePage,
     },
     {
       path: '/user/login',
