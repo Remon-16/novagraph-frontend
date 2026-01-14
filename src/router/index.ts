@@ -8,6 +8,9 @@ import FeedPage from '@/pages/FeedPage.vue'
 import UserAttnPage from '@/pages/user/UserAttnPage.vue'
 import UserMessagePage from '@/pages/user/UserMessagePage.vue'
 import HomePage from '@/pages/HomePage.vue'
+import StmHomePage from '@/pages/user/STMHomePage.vue'
+import PicHomePage from '@/pages/user/PicHomePage.vue'
+import SPDetailPage from '@/pages/SPDetailPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +34,21 @@ const router = createRouter({
       path: '/user/message',
       name: '用户信息',
       component: UserMessagePage,
+    },
+    {
+      path: '/user/st_manage',
+      name: '用户剧本管理',
+      component: StmHomePage,
+    },
+    {
+      path: '/user/pic_manage',
+      name: '用户图片管理',
+      component: PicHomePage,
+    },
+    {
+      path: '/sp_detail',
+      name: '剧本详情',
+      component: SPDetailPage,
     },
     {
       path: '/favorites',
