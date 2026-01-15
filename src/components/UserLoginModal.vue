@@ -105,21 +105,6 @@
           </a-input>
         </a-form-item>
 
-        <a-form-item name="nickname">
-          <template #label>
-            <span class="form-label">昵称</span>
-          </template>
-          <a-input
-            v-model:value="registerForm.nickname"
-            placeholder="请输入用户昵称"
-            size="large"
-          >
-            <template #prefix>
-              <SmileOutlined />
-            </template>
-          </a-input>
-        </a-form-item>
-
         <a-form-item name="password">
           <template #label>
             <span class="form-label">密码</span>
@@ -172,9 +157,10 @@ import { message } from 'ant-design-vue'
 import {
   UserOutlined,
   LockOutlined,
-  SmileOutlined
 } from '@ant-design/icons-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
+import { userLogin, userRegister } from '@/api/userController'
+import router from '@/router'
 
 // Props
 interface Props {
@@ -214,7 +200,6 @@ const loginForm = reactive({
 // 注册表单数据
 const registerForm = reactive({
   username: '',
-  nickname: '',
   password: '',
   confirmPassword: ''
 })
@@ -235,10 +220,6 @@ const registerRules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 3, max: 20, message: '用户名长度在3-20个字符之间', trigger: 'blur' }
-  ],
-  nickname: [
-    { required: true, message: '请输入用户昵称', trigger: 'blur' },
-    { min: 2, max: 20, message: '昵称长度在2-20个字符之间', trigger: 'blur' }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
@@ -282,20 +263,29 @@ const handleCancel = () => {
   currentView.value = 'login'
 }
 
-// TODO: 登录逻辑 - 需要对接后端API
+// 用户登录
 const handleLogin = async () => {
   try {
     loading.value = true
 
-    // TODO: 调用登录API
-    // const result = await loginAPI({
-    //   username: loginForm.username,
-    //   password: loginForm.password
-    // })
+    const values = {
+      userAccount: loginForm.username,
+      userPassword: loginForm.password,
+    }
 
-    loginUserStore.fetchLoginUser()
-
-    message.success('登录成功！')
+    const res = await userLogin(values)
+    // 登录成功，把登录态保存到全局状态中
+    if (res.data.code === 0 && res.data.data) {
+      localStorage.setItem('authToken', res.data.data.token);
+      await loginUserStore.fetchLoginUser()
+      message.success('登录成功')
+      router.push({
+        path: '/',
+        replace: true,
+      })
+    } else {
+      message.error('登录失败，' + res.data.message)
+    }
 
     // 触发登录成功事件
     emit('login-success')
@@ -308,30 +298,26 @@ const handleLogin = async () => {
   }
 }
 
-// TODO: 注册逻辑 - 需要对接后端API
+// 注册逻辑
 const handleRegister = async () => {
   try {
     loading.value = true
 
-    // TODO: 调用注册API
-    // const result = await registerAPI({
-    //   username: registerForm.username,
-    //   nickname: registerForm.nickname,
-    //   password: registerForm.password
-    // })
+    const values = {
+      userAccount: registerForm.username,
+      userPassword: registerForm.password,
+      checkPassword: registerForm.confirmPassword,
+    }
 
-    // 临时模拟 - 实际使用时删除
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    console.log('注册信息:', {
-      username: registerForm.username,
-      nickname: registerForm.nickname,
-      password: registerForm.password
-    })
-
-    message.success('注册成功！请登录')
-
-    // 注册成功后切换到登录
-    switchToLogin()
+    const res = await userRegister(values)
+    // 注册成功，跳转到登录页面
+    if (res.data.code === 0 && res.data.data) {
+      message.success('注册成功！请登录')
+      // 注册成功后切换到登录
+      switchToLogin()
+    } else {
+      message.error('注册失败，' + res.data.message)
+    }
 
   } catch (error) {
     message.error('注册失败，请重试')

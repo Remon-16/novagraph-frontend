@@ -31,6 +31,7 @@ coverage
 
 *.tsbuildinfo
 
+.generator
 .env
 openapi.config.js
 

@@ -21,11 +21,6 @@ const router = createRouter({
       component: HomePage,
     },
     {
-      path: '/user/login',
-      name: '用户登录',
-      component: UserLoginModal,
-    },
-    {
       path: '/user/info',
       name: '用户资料',
       component: UserInfoPage,

@@ -26,36 +26,25 @@
         @search="handleSearch"
       />
 
-      <!-- 未登录状态 -->
-      <template v-if="!userStore.isLoggedIn">
-        <a-button type="text" @click="handleLogin">
-          登录
-        </a-button>
-        <a-button type="primary" @click="handleRegister">
-          注册
-        </a-button>
-      </template>
-
-      <!-- 已登录状态 -->
-      <template v-else>
+      <a-space>
         <!-- 动态中心 -->
         <div>
-          <div v-if="unReadMessage" class="badge-dot"></div>
+          <div class="badge-dot"></div>
           <MessageOutlined class="message-icon" />
         </div>
         <!-- 历史列表 -->
         <div>
-          <div v-if="unReadMessage" class="badge-dot"></div>
+          <div class="badge-dot"></div>
           <HistoryOutlined class="message-icon" />
         </div>
         <!-- 收藏夹 -->
         <div>
-          <div v-if="unReadMessage" class="badge-dot"></div>
+          <div class="badge-dot"></div>
           <StarOutlined class="message-icon" />
         </div>
         <!-- 消息中心 -->
         <div>
-          <div v-if="unReadMessage" class="badge-dot"></div>
+          <div class="badge-dot"></div>
           <MailOutlined class="message-icon" />
         </div>
         <!-- 创作中心 -->
@@ -74,10 +63,9 @@
           <!-- 用户信息栏 -->
           <a-dropdown :trigger="['click']" placement="bottomRight">
             <div class="user-avatar">
-              <a-avatar :size="32" :src="userStore.userInfo?.avatar">
-                {{ userStore.userInfo?.nickname?.charAt(0) }}
+              <a-avatar :size="32" :src="loginUserStore.loginUser?.userAvatar">
               </a-avatar>
-              <span class="username">{{ userStore.userInfo?.nickname }}</span>
+              <span class="username">{{ loginUserStore.loginUser?.userName }}</span>
               <DownOutlined class="dropdown-icon" />
             </div>
             <template #overlay>
@@ -116,9 +104,7 @@
             登录 / 注册
           </a-button>
         </div>
-
-
-      </template>
+      </a-space>
     </div>
   </div>
 </template>
@@ -138,7 +124,7 @@ import {
 } from '@ant-design/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
-import { computed, h, ref } from 'vue'
+import { computed, h, onMounted, ref } from 'vue'
 import { type MenuProps, message } from 'ant-design-vue'
 import UserLoginModal from '@/components/UserLoginModal.vue'
 
@@ -164,16 +150,6 @@ const handleLoginSuccess = () => {
   showAuthModal.value = false
   // 可以在这里刷新用户信息等操作
 }
-
-// 用户状态管理（模拟）
-const userStore = {
-  isLoggedIn: ref(false),
-  userInfo: ref({
-    nickname: '用户昵称',
-    avatar: ''
-  })
-}
-
 
 // 响应式数据
 const selectedKeys = ref<string[]>(['home'])
@@ -264,20 +240,12 @@ const handleRegister = () => {
 }
 
 const handleUpload = () => {
-  if (!userStore.isLoggedIn.value) {
+  if (!loginUserStore.loginUser.id) {
     message.warning('请先登录后再上传图片')
     return
   }
   // 打开上传对话框
   message.info('打开上传对话框')
-}
-
-const handleAIDraw = () => {
-  if (!userStore.isLoggedIn.value) {
-    message.warning('请先登录后再使用AI绘图')
-    return
-  }
-  router.push('/ai-draw')
 }
 
 const handleProfile = () => {
@@ -292,8 +260,12 @@ const handleFavorites = () => {
   router.push('/favorites')
 }
 
+const getLoginUser = async () => {
+  await loginUserStore.fetchLoginUser()
+}
+
 const handleLogout = () => {
-  userStore.isLoggedIn.value = false
+  localStorage.removeItem('authToken')
   message.success('已退出登录')
   router.push('/')
 }
