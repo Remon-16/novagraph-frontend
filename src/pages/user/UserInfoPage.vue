@@ -83,7 +83,7 @@
         />
       </a-form-item>
     </a-form>
-    
+
   </a-modal>
 </template>
 
@@ -91,19 +91,22 @@
 import {
   UserOutlined, EditOutlined
 } from '@ant-design/icons-vue'
-import { h, reactive, ref } from 'vue'
+import { h, onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
+import { useLoginUserStore } from '@/stores/useLoginUserStore'
+import { getUserVoById, updateUserAvatar, updateUserInfo } from '@/api/userController'
 
-// 模拟用户初始数据 (实际开发中这些数据来自后端 API)
+const loginUserStore = useLoginUserStore()
+
 const userInfo = reactive({
-  userId: '10086888',
-  account: 'user@example.com',
-  nickname: '前端探索者',
+  userId: loginUserStore.loginUser.id,
+  account: loginUserStore.loginUser.userAccount,
+  nickname: loginUserStore.loginUser.userName,
   points: 5200,
   registerTime: '2023-01-15 10:30:00',
   isMember: true,
   memberExpireTime: '2027-12-31 23:59:59',
-  bio: '热爱技术，专注于 Vue3 和 Web 开发。',
+  bio: loginUserStore.loginUser.userProfile,
   avatar: 'https://picsum.photos/seed/user123/200/200.jpg'
 });
 
@@ -112,6 +115,36 @@ const editForm = reactive({
   nickname: '',
   bio: ''
 });
+
+// 获取图片详情
+const fetchUserDetail = async () => {
+  try {
+    const res = await getUserVoById({
+      id: loginUserStore.loginUser.id,
+    })
+    if (res.data.code === 0 && res.data.data) {
+      userInfo.userId = res.data.data.id
+      const createTime = res.data.data.createTime
+      const date = new Date(createTime)
+      userInfo.registerTime = date.toISOString().split('T')[0];
+      userInfo.account = res.data.data.userAccount
+      userInfo.avatar = res.data.data.userAvatar
+      userInfo.points = res.data.data.userScore
+      userInfo.memberExpireTime = res.data.data.vipExpiry
+      userInfo.isMember = res.data.data.vipType == "0"
+      userInfo.bio = res.data.data.userProfile
+      userInfo.nickname = res.data.data.userName
+    } else {
+      message.error('获取用户信息失败，' + res.data.message)
+    }
+  } catch (e: any) {
+    message.error('获取用户信息失败：' + e.message)
+  }
+}
+
+onMounted(() => {
+  fetchUserDetail()
+})
 
 // 组件状态
 const isModalVisible = ref(false);
@@ -127,7 +160,7 @@ const openEditModal = () => {
 };
 
 // 方法：保存编辑
-const handleSave = () => {
+const handleSave = async () => {
   if (!editForm.nickname.trim()) {
     message.warning('昵称不能为空');
     return;
@@ -135,18 +168,22 @@ const handleSave = () => {
 
   loading.value = true;
 
-  // 模拟网络请求延迟
-  setTimeout(() => {
-    // 更新用户信息
-    userInfo.nickname = editForm.nickname;
-    userInfo.bio = editForm.bio;
+  const values = reactive<API.UserUpdateInfoRequest>({
+    id: loginUserStore.loginUser.id,
+    userName: editForm.nickname,
+    userProfile: editForm.bio,
+  })
 
-    loading.value = false;
-    isModalVisible.value = false;
-    message.success('资料更新成功');
-
-    // TODO: 在此处调用后端 API 提交数据
-  }, 800);
+  const res = await updateUserInfo(values)
+  // 更新成功
+  if (res.data.code === 0 && res.data.data) {
+    await loginUserStore.fetchLoginUser()
+    await fetchUserDetail()
+    message.success('更新成功')
+  } else {
+    message.error('更新失败，' + res.data.message)
+  }
+  loading.value = false;
 };
 
 // 方法：取消编辑
@@ -186,7 +223,7 @@ const handleFileChange = (event) => {
   reader.onload = (e) => {
     userInfo.avatar = e.target.result; // 更新头像显示
     message.success('头像已选择，请记得保存（模拟）');
-    // TODO: 在此处调用后端 API 上传文件 (formData.append('file', file))
+    handleUpload(file)
   };
   reader.readAsDataURL(file);
 
@@ -199,6 +236,27 @@ const formatDate = (dateStr) => {
   if(!dateStr) return '';
   return dateStr; // 这里为了演示简单直接返回，实际可用 dayjs(dateStr).format('YYYY-MM-DD')
 };
+
+/**
+ * 上传图片
+ * @param file
+ */
+const handleUpload = async ({ file }: any) => {
+  loading.value = true
+  try {
+    const params: API.updateUserAvatarParams =  {}
+    const res = await updateUserAvatar(params, {}, file)
+    if (res.data.code === 0 && res.data.data) {
+      message.success('头像上传成功')
+    } else {
+      message.error('头像上传失败，' + res.data.message)
+    }
+  } catch (error) {
+    console.error('头像上传失败', error)
+    message.error('头像上传失败，' + error.message)
+  }
+  loading.value = false
+}
 </script>
 
 <style scoped>

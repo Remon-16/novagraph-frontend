@@ -74,9 +74,11 @@
                   <UserOutlined />
                   我的空间
                 </a-menu-item>
-                <a-menu-item key="my-images" @click="handleMyImages">
-                  <FormOutlined />
-                  个人资料
+                <a-menu-item>
+                  <router-link to="/user/info">
+                    <FormOutlined />
+                      个人资料
+                  </router-link>
                 </a-menu-item>
                 <a-menu-item key="favorites" @click="handleFavorites">
                   <ShoppingOutlined />

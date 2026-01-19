@@ -1,4 +1,10 @@
 declare namespace API {
+  type BaseResponseBoolean = {
+    code?: number
+    data?: boolean
+    message?: string
+  }
+
   type BaseResponseLoginUserVO = {
     code?: number
     data?: LoginUserVO
@@ -22,8 +28,19 @@ declare namespace API {
     userName?: string
     userAvatar?: string
     userProfile?: string
-    userRole?: string
     createTime?: string
+  }
+
+  type updateUserAvatarParams = {
+    userUpdateInfoRequest: UserUpdateInfoRequest
+  }
+
+  type updateUserInfoParams = {
+    userUpdateInfoRequest: UserUpdateInfoRequest
+  }
+
+  type getUserVOByIdParams = {
+    id: number
   }
 
   type User = {
@@ -45,6 +62,12 @@ declare namespace API {
     userListJson?: string
   }
 
+  type BaseResponseUserVO = {
+    code?: number
+    data?: UserVO
+    message?: string
+  }
+
   type UserLoginRequest = {
     userAccount?: string
     userPassword?: string
@@ -55,4 +78,14 @@ declare namespace API {
     userPassword?: string
     checkPassword?: string
   }
+
+  type UserUpdateInfoRequest = {
+    id?: number
+    userName?: string
+    userAvatar?: string
+    userProfile?: string
+    vipExpiry?: string
+    vipType?: string
+  }
+
 }
