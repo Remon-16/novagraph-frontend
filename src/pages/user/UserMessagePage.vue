@@ -120,6 +120,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import router from '@/router'
+import { allMessageRead, changeMessageStatus, listMessageVoByPage } from '@/api/messageController'
 
 
 const activeTab = ref('reply');
@@ -203,7 +204,7 @@ const formatResTime = (resList: API.MessageVo[]) => {
   return resList
 }
 
-const fetchData = async (messageType: string, searchParams: API.PictureQueryRequest) => {
+const fetchData = async (messageType: string, searchParams: API.UserMessageRequest) => {
   loading.value = true
   // 转换搜索参数
   const params = {
@@ -211,9 +212,7 @@ const fetchData = async (messageType: string, searchParams: API.PictureQueryRequ
     userId: loginUserStore.loginUser.id,
     messageType: messageType
   }
-  const res = {
-    data: undefined
-  }
+  const res = await listMessageVoByPage(params)
   if (res.data.code === 0 && res.data.data) {
     if(messageType === 'reply') {
       replyDataList.value = res.data.data.records ?? []
@@ -241,9 +240,7 @@ const markAsRead = async (id) => {
     messageStatus: '1',
   }
   try {
-    const res = {
-      data: undefined
-    }
+    const res = await changeMessageStatus(params)
     if (res.data.code === 0 && res.data.data) {
 
     } else {
@@ -268,9 +265,7 @@ const markAllAsRead = async (messageType: string) => {
     messageType: messageType,
   }
   try {
-    const res = {
-      data: undefined
-    }
+    const res = await allMessageRead(params)
     if (res.data.code === 0 && res.data.data) {
       if(messageType === 'reply') {
         localMarkAllRead(replyDataList.value)

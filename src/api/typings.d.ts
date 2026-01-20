@@ -17,8 +17,20 @@ declare namespace API {
     message?: string
   }
 
-  type getUserByIdParams = {
-    userId: number
+  type BaseResponsePageMessageVO = {
+    code?: number
+    data?: PageMessageVO
+    message?: string
+  }
+
+  type BaseResponseUserVO = {
+    code?: number
+    data?: UserVO
+    message?: string
+  }
+
+  type getUserVOByIdParams = {
+    id: number
   }
 
   type LoginUserVO = {
@@ -31,6 +43,51 @@ declare namespace API {
     createTime?: string
   }
 
+  type MessageVO = {
+    id?: number
+    userId?: number
+    content?: string
+    messageType?: string
+    messageState?: string
+    senderId?: number
+    screenplayId?: number
+    commentId?: number
+    screenplayCommentVO?: ScreenplayCommentVO
+    createTime?: string
+  }
+
+  type OrderItem = {
+    column?: string
+    asc?: boolean
+  }
+
+  type PageMessageVO = {
+    records?: MessageVO[]
+    total?: number
+    size?: number
+    current?: number
+    orders?: OrderItem[]
+    optimizeCountSql?: PageMessageVO
+    searchCount?: PageMessageVO
+    optimizeJoinOfCountSql?: boolean
+    maxLimit?: number
+    countId?: string
+    pages?: number
+  }
+
+  type ScreenplayCommentVO = {
+    id?: number
+    userId?: number
+    screenplayId?: number
+    targetId?: number
+    secondTargetId?: number
+    targetUserId?: number
+    targetUserName?: string
+    content?: string
+    user?: UserVO
+    createTime?: string
+  }
+
   type updateUserAvatarParams = {
     userUpdateInfoRequest: UserUpdateInfoRequest
   }
@@ -39,38 +96,20 @@ declare namespace API {
     userUpdateInfoRequest: UserUpdateInfoRequest
   }
 
-  type getUserVOByIdParams = {
-    id: number
-  }
-
-  type User = {
-    id?: number
-    userAccount?: string
-    userPassword?: string
-    userName?: string
-    userAvatar?: string
-    userProfile?: string
-    userRole?: string
-    roomCode?: string
-    editTime?: string
-    createTime?: string
-    updateTime?: string
-    isDelete?: number
-  }
-
-  type UserListVO = {
-    userListJson?: string
-  }
-
-  type BaseResponseUserVO = {
-    code?: number
-    data?: UserVO
-    message?: string
-  }
-
   type UserLoginRequest = {
     userAccount?: string
     userPassword?: string
+  }
+
+  type UserMessageRequest = {
+    current?: number
+    pageSize?: number
+    sortField?: string
+    sortOrder?: string
+    userId?: number
+    messageId?: number
+    messageType?: string
+    messageStatus?: string
   }
 
   type UserRegisterRequest = {
@@ -88,4 +127,12 @@ declare namespace API {
     vipType?: string
   }
 
+  type UserVO = {
+    id?: number
+    userAccount?: string
+    userName?: string
+    userAvatar?: string
+    userProfile?: string
+    createTime?: string
+  }
 }

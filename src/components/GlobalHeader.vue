@@ -44,8 +44,10 @@
         </div>
         <!-- 消息中心 -->
         <div>
-          <div class="badge-dot"></div>
-          <MailOutlined class="message-icon" />
+          <router-link to="/user/message" class="icon-container" @click="unReadMessage=false">
+            <div v-if="unReadMessage == 'y'" class="badge-dot"></div>
+            <MailOutlined class="message-icon" />
+          </router-link>
         </div>
         <!-- 创作中心 -->
         <a-button
@@ -129,6 +131,7 @@ import { useLoginUserStore } from '@/stores/useLoginUserStore'
 import { computed, h, onMounted, ref } from 'vue'
 import { type MenuProps, message } from 'ant-design-vue'
 import UserLoginModal from '@/components/UserLoginModal.vue'
+import { getExistUnReadMessage } from '@/api/messageController'
 
 const props = defineProps({
   searchValue: String
@@ -145,7 +148,46 @@ const loginUserStore = useLoginUserStore()
 
 // 控制模态框显示/隐藏
 const showAuthModal = ref(false)
-const unReadMessage = ref(false)
+
+// 检查是否有未读信息
+const unReadMessage = ref('n')
+const intervalId = ref(null)
+//
+const fetchUserUnReadMessageData = async () => {
+  const token = localStorage.getItem('authToken')
+  if (!token) {
+    return
+  }
+  const params = {
+    userId: loginUserStore.loginUser.id,
+  }
+
+  try {
+    const res = await getExistUnReadMessage(params)
+    if (res.data.code === 0 && res.data.data != null) {
+      if(res.data.data){
+        unReadMessage.value = 'y'
+      }else {
+        unReadMessage.value = 'n'
+      }
+
+    } else {
+    }
+  } catch (e: any) {}
+}
+
+// 开始轮询
+const startPolling = () => {
+  // 立即执行一次请求
+  fetchUserUnReadMessageData()
+  // 设置定时器，每20秒执行一次
+  intervalId.value = setInterval(fetchUserUnReadMessageData, 20000)
+}
+
+onMounted(() => {
+  unReadMessage.value = 'n'
+  startPolling()
+})
 
 // 登录成功回调
 const handleLoginSuccess = () => {
