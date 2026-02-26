@@ -15,6 +15,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@antv/x6": "^2.18.1",
+    "@antv/x6-plugin-history": "^2.2.4",
+    "@antv/x6-plugin-selection": "^2.2.2",
+    "@antv/x6-plugin-snapline": "^2.1.7",
+    "@antv/x6-vue-shape": "^2.1.2",
     "ant-design-vue": "^4.2.6",
     "axios": "^1.13.2",
     "pinia": "^2.2.6",

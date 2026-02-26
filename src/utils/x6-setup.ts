@@ -1,0 +1,127 @@
+import { Graph } from '@antv/x6'
+import { register } from '@antv/x6-vue-shape'
+import BasicNode from '@/components/flowChart/BasicNode.vue'
+import SelectBranchNode from '@/components/flowChart/SelectBranchNode.vue'
+import GameBranchNode from '@/components/flowChart/GameBranchNode.vue'
+
+
+// 注册Vue节点
+register({
+  shape: 'custom-basic-node',
+  width: 120,
+  height: 'auto',
+  component: BasicNode,
+  data: {
+    label: '',
+    properties: [],
+    imageUrl: 'https://picos.imagocore.top/public/1928052943001227266/2025-09-18_AOdmjrQeWl2gYK0g.webp'
+  }
+})
+
+register({
+  shape: 'custom-select-node',
+  width: 120,
+  height: 'auto',
+  component: SelectBranchNode,
+  data: {
+    label: '',
+    properties: [],
+    imageUrl: 'https://picos.imagocore.top/public/1928052943001227266/2025-09-18_AOdmjrQeWl2gYK0g.webp'
+  }
+})
+
+register({
+  shape: 'custom-game-node',
+  width: 120,
+  height: 'auto',
+  component: GameBranchNode,
+  data: {
+    label: '',
+    properties: [],
+    imageUrl: 'https://picos.imagocore.top/public/1928052943001227266/2025-09-18_AOdmjrQeWl2gYK0g.webp'
+  }
+})
+
+// 注册自定义边
+Graph.registerEdge(
+  'custom-edge',
+  {
+    inherit: 'edge',
+    attrs: {
+      line: {
+        stroke: '#A2B1C3',
+        strokeWidth: 2,
+        strokeDasharray: '0',
+        targetMarker: {
+          name: 'block',
+          width: 12,
+          height: 8
+        }
+      }
+    },
+    connector: { name: 'rounded' },
+    router: {
+      name: 'manhattan'
+    }
+  },
+  true
+)
+
+// 定义节点类型
+export const nodeTypes = [
+  {
+    type: 'process',
+    name: '标准节点',
+    shape: 'custom-basic-node',
+    width: 120,
+    height: 120,
+    data: {
+      label: '标准节点',
+      properties: ['数据处理']
+    }
+  },
+  {
+    type: 'select',
+    name: '选择分支节点',
+    shape: 'custom-select-node',
+    width: 120,
+    height: 120,
+    data: {
+      label: '选择分支节点',
+      properties: ['条件判断']
+    }
+  },
+  {
+    type: 'game',
+    name: '游戏分支节点',
+    shape: 'custom-game-node',
+    width: 120,
+    height: 120,
+    data: {
+      label: '游戏分支节点',
+      properties: ['条件判断']
+    }
+  },
+  {
+    type: 'start',
+    name: '开始节点',
+    shape: 'ellipse',
+    width: 110,
+    height: 70,
+    data: {
+      label: '开始',
+      properties: ['开始流程']
+    }
+  },
+  {
+    type: 'end',
+    name: '结束节点',
+    shape: 'ellipse',
+    width: 110,
+    height: 70,
+    data: {
+      label: '结束',
+      properties: ['结束流程']
+    }
+  }
+]
